@@ -25,7 +25,6 @@ CLASS zcl_ab_todo_res_app IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD register_resources.
-*   TODO something
 
     registry->register_discoverable_resource(
         url             = '/resttodos/ab/todos'
