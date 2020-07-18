@@ -1,0 +1,19 @@
+<?sap.transform simple?>
+<tt:transform xmlns:tt="http://www.sap.com/transformation-templates" xmlns:ddic="http://www.sap.com/abapxml/types/dictionary" xmlns:todos="http://www.sap.com/adt/plugin/todo">
+  <tt:root name="todo_data" type="ddic:zab_todo_tt"/>
+  <tt:template>
+    <todos>
+      <tt:loop name="todo" ref=".todo_data">
+        <todo>
+          <tt:attribute name="object_name" value-ref="$todo.obj_name"/>
+          <tt:attribute name="object_type" value-ref="$todo.object_type"/>
+          <tt:attribute name="type" value-ref="$todo.type"/>
+          <tt:attribute name="description" value-ref="$todo.description"/>
+          <tt:attribute name="line" value-ref="$todo.line"/>
+          <tt:attribute name="parent" value-ref="$todo.parent"/>
+          <tt:attribute name="package_name" value-ref="$todo.package_name"/>
+        </todo>
+      </tt:loop>
+    </todos>
+  </tt:template>
+</tt:transform>
