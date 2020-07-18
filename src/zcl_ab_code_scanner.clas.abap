@@ -421,7 +421,7 @@ CLASS zcl_ab_code_scanner IMPLEMENTATION.
   METHOD is_relevant.
 
     DATA(code) = code_line.
-    CONDENSE code NO-GAPS.
+    CONDENSE code.
 
     result = abap_false.
 
