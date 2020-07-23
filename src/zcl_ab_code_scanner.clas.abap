@@ -651,7 +651,7 @@ CLASS zcl_ab_code_scanner IMPLEMENTATION.
 
   METHOD get_objects_to_scan_of_trs.
 
-    DATA(tr_selopt) = VALUE /msg/r_s_selopt( FOR <task> IN tasks_trs_to_scan
+    DATA(tr_selopt) = VALUE rsdsselopt_t( FOR <task> IN tasks_trs_to_scan
                                               ( sign   = 'I'
                                                 option = 'EQ'
                                                 low    = <task>-name ) ).
