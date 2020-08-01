@@ -12,13 +12,14 @@ CLASS zcl_ab_todo_res_controller DEFINITION
     CONSTANTS co_root_name TYPE string VALUE 'TODO_DATA'.   "#EC NOTEXT
 
     TYPES: BEGIN OF attributes_ts,
-             obj_name      TYPE string,
-             scan_todo     TYPE abap_bool,
-             scan_fixme    TYPE abap_bool,
-             scan_xxx      TYPE abap_bool,
-             custom_text   TYPE string,
-             deep_scan     TYPE abap_bool,
-             created_by_me TYPE abap_bool,
+             obj_name         TYPE string,
+             scan_todo        TYPE abap_bool,
+             scan_fixme       TYPE abap_bool,
+             scan_xxx         TYPE abap_bool,
+             custom_text      TYPE string,
+             deep_scan        TYPE abap_bool,
+             created_by_me    TYPE abap_bool,
+             scan_source_code TYPE abap_bool,
            END OF attributes_ts.
 
     CLASS-METHODS get_content_handler RETURNING VALUE(result) TYPE REF TO if_adt_rest_content_handler.

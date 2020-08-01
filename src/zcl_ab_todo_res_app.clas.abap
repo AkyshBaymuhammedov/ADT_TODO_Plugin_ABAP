@@ -44,7 +44,7 @@ CLASS zcl_ab_todo_res_app IMPLEMENTATION.
 
     collection->register_disc_res_w_template(
                    relation = 'http://www.msg.com/adt/relations/ab/todos'
-                   template = '/resttodos/ab/todos/{OBJ_NAME}/{SCAN_TODO}/{SCAN_FIXME}/{SCAN_XXX}/{DEEP_SCAN}/{CREATED_BY_ME}/{CUSTOM_TEXT}'
+                   template = '/resttodos/ab/todos/{OBJ_NAME}/{SCAN_TODO}/{SCAN_FIXME}/{SCAN_XXX}/{DEEP_SCAN}/{CREATED_BY_ME}/{CUSTOM_TEXT}/{SCAN_SOURCE_CODE}'
                    description = 'TODO plugin'
                    type = 'application/xml'
                    handler_class = zcl_ab_todo_res_controller=>co_class_name

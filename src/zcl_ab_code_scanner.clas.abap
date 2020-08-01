@@ -97,6 +97,7 @@ CLASS zcl_ab_code_scanner DEFINITION
 
     METHODS get_todo_info IMPORTING pattern       TYPE string
                                     code_line     TYPE string
+                                    attributes    TYPE zcl_ab_todo_res_controller=>attributes_ts
                           RETURNING VALUE(result) TYPE relevant_todo_info.
 
     METHODS get_includes IMPORTING programs_includes TYPE package_objects
@@ -112,6 +113,7 @@ CLASS zcl_ab_code_scanner DEFINITION
       IMPORTING
         pattern       TYPE string
         code_line     TYPE string
+        attributes    TYPE zcl_ab_todo_res_controller=>attributes_ts
       RETURNING
         VALUE(result) TYPE abap_bool.
 
@@ -124,6 +126,7 @@ CLASS zcl_ab_code_scanner DEFINITION
       IMPORTING patterns      TYPE string_t
                 object        TYPE zcl_ab_code_scanner=>package_object
                 source_code   TYPE rswsourcet
+                attributes    TYPE zcl_ab_todo_res_controller=>attributes_ts
       RETURNING VALUE(result) TYPE zcl_ab_code_scanner=>relevant_todos.
 
     METHODS get_patterns
@@ -243,7 +246,8 @@ CLASS zcl_ab_code_scanner IMPLEMENTATION.
 
       all_todos = CORRESPONDING #( ( all_todos ) scan_for_patterns( object      = <object>
                                                                     source_code = source_code
-                                                                    patterns    = patterns ) ).
+                                                                    patterns    = patterns
+                                                                    attributes  = attributes ) ).
     ENDLOOP.
 
     result = all_todos.
@@ -262,7 +266,8 @@ CLASS zcl_ab_code_scanner IMPLEMENTATION.
 
       all_todos = CORRESPONDING #( ( all_todos ) scan_for_patterns( object      = <object>
                                                                     source_code = source_code
-                                                                    patterns    = patterns ) ).
+                                                                    patterns    = patterns
+                                                                    attributes  = attributes ) ).
     ENDLOOP.
 
     result = all_todos.
@@ -412,8 +417,9 @@ CLASS zcl_ab_code_scanner IMPLEMENTATION.
   METHOD get_todo_info.
 
     DATA(todo_info) = VALUE relevant_todo_info( todo_description = substring_from( val = code_line sub = pattern )
-                                                is_relevant      = is_relevant( code_line = code_line
-                                                                                pattern   = pattern ) ).
+                                                is_relevant      = is_relevant( code_line  = code_line
+                                                                                pattern    = pattern
+                                                                                attributes = attributes ) ).
     result = todo_info.
   ENDMETHOD.
 
@@ -425,7 +431,16 @@ CLASS zcl_ab_code_scanner IMPLEMENTATION.
 
     result = abap_false.
 
-    DATA(search_pattern) = '*"' && pattern && '*'.
+    DATA(search_pattern) = '*' && pattern && '*'.
+    IF attributes-scan_source_code = abap_true AND pattern = attributes-custom_text.
+      IF code CP search_pattern.
+
+        result = abap_true.
+        RETURN.
+      ENDIF.
+    ENDIF.
+
+    search_pattern = '*"' && search_pattern.
     IF code CP search_pattern OR code+0(1) = '*'.
 
       result  = abap_true.
@@ -488,7 +503,8 @@ CLASS zcl_ab_code_scanner IMPLEMENTATION.
 
       DATA(todos) = scan_for_patterns( object      = local_class
                                        source_code = source_code
-                                       patterns    = patterns ).
+                                       patterns    = patterns
+                                       attributes  = attributes ).
 
       DATA(class_name) = substring_before( val = local_class-name sub = '=' ).
 
@@ -570,8 +586,9 @@ CLASS zcl_ab_code_scanner IMPLEMENTATION.
 
       all_todos = VALUE #( BASE all_todos
                              FOR <todo> IN matches
-                               LET relevant_todo_info = get_todo_info( code_line = source_code[ <todo>-line ]
-                                                                       pattern   = pattern ) IN
+                               LET relevant_todo_info = get_todo_info( code_line  = source_code[ <todo>-line ]
+                                                                       pattern    = pattern
+                                                                       attributes = attributes ) IN
                                 ( description = relevant_todo_info-todo_description
                                   obj_name    = object-name
                                   object_type = object-type
