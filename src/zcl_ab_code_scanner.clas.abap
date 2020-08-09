@@ -12,8 +12,11 @@ CLASS zcl_ab_code_scanner DEFINITION
 
     CLASS-METHODS class_constructor.
 
+    TYPES string_tt TYPE STANDARD TABLE OF string WITH NON-UNIQUE DEFAULT KEY.
+
   PROTECTED SECTION.
   PRIVATE SECTION.
+
     TYPES: BEGIN OF package_object,
              name         TYPE sobj_name,
              type         TYPE trobjtype,
@@ -123,7 +126,7 @@ CLASS zcl_ab_code_scanner DEFINITION
                                  RETURNING VALUE(result) TYPE package_objects.
 
     METHODS scan_for_patterns
-      IMPORTING patterns      TYPE string_t
+      IMPORTING patterns      TYPE string_tt
                 object        TYPE zcl_ab_code_scanner=>package_object
                 source_code   TYPE rswsourcet
                 attributes    TYPE zcl_ab_todo_res_controller=>attributes_ts
@@ -131,7 +134,7 @@ CLASS zcl_ab_code_scanner DEFINITION
 
     METHODS get_patterns
       IMPORTING attributes    TYPE zcl_ab_todo_res_controller=>attributes_ts
-      RETURNING VALUE(result) TYPE string_t.
+      RETURNING VALUE(result) TYPE zcl_ab_code_scanner=>string_tt.
 
     METHODS get_objects_to_scan_of_packs
       IMPORTING
@@ -231,7 +234,7 @@ CLASS zcl_ab_code_scanner IMPLEMENTATION.
 
   METHOD scan_programs_includes_fms.
 
-    DATA(source_code) = VALUE string_t(  ).
+    DATA(source_code) = VALUE string_tt(  ).
     DATA(todos) = VALUE match_result_tab(  ).
     DATA(all_todos) = VALUE relevant_todos(  ).
     DATA(patterns) = get_patterns( attributes ).
@@ -604,7 +607,7 @@ CLASS zcl_ab_code_scanner IMPLEMENTATION.
 
   METHOD get_patterns.
 
-    DATA(patterns) = VALUE string_t( ).
+    DATA(patterns) = VALUE string_tt( ).
 
     IF attributes-scan_todo = abap_true.
 
