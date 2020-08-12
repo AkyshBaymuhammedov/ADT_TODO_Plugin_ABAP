@@ -13,6 +13,7 @@ CLASS zcl_ab_code_scanner DEFINITION
     CLASS-METHODS class_constructor.
 
     TYPES string_tt TYPE STANDARD TABLE OF string WITH NON-UNIQUE DEFAULT KEY.
+    TYPES selopt_tt TYPE STANDARD TABLE OF rsdsselopt WITH EMPTY KEY.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -88,11 +89,11 @@ CLASS zcl_ab_code_scanner DEFINITION
 
     METHODS get_relevant_object_types
       RETURNING
-        VALUE(result) TYPE rsdsselopt_t.
+        VALUE(result) TYPE selopt_tt.
 
     METHODS get_supported_object_types
       RETURNING
-        VALUE(result) TYPE rsdsselopt_t.
+        VALUE(result) TYPE selopt_tt.
 
     METHODS get_function_module_include
       IMPORTING function_module TYPE tfdir
@@ -208,7 +209,7 @@ CLASS zcl_ab_code_scanner IMPLEMENTATION.
     DATA(includes) = get_includes( programs_includes ).
     DATA(programs) = programs_includes.
 
-    DATA(includes_selopt) = VALUE rsdsselopt_t( FOR <include> IN includes
+    DATA(includes_selopt) = VALUE selopt_tt( FOR <include> IN includes
                                                   ( sign   = 'I'
                                                     option = 'EQ'
                                                     low    = <include>-name ) ).
@@ -327,14 +328,14 @@ CLASS zcl_ab_code_scanner IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    DATA(packages_selopt) = VALUE rsdsselopt_t( FOR <package> IN packages
+    DATA(packages_selopt) = VALUE selopt_tt( FOR <package> IN packages
                                                   ( sign   = 'I'
                                                     option = 'EQ'
                                                     low    = <package>-name ) ).
 
     DATA(object_types) = get_relevant_object_types( ).
 
-    DATA(author) = VALUE rsdsselopt_t(  ).
+    DATA(author) = VALUE selopt_tt(  ).
     IF attributes-created_by_me = abap_true.
 
       author = VALUE #( ( sign   = 'I'
@@ -358,7 +359,7 @@ CLASS zcl_ab_code_scanner IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    DATA(function_groups_selopt) = VALUE rsdsselopt_t( FOR <function_group> IN function_groups
+    DATA(function_groups_selopt) = VALUE selopt_tt( FOR <function_group> IN function_groups
                                                            ( sign   = 'I'
                                                              option = 'EQ'
                                                              low    = <function_group>-name ) ).
@@ -366,7 +367,7 @@ CLASS zcl_ab_code_scanner IMPLEMENTATION.
     SELECT * FROM enlfdir INTO TABLE @DATA(function_modules) WHERE area     IN @function_groups_selopt
                                                                 OR funcname IN @function_groups_selopt.
 
-    DATA(function_modules_selopt) = VALUE rsdsselopt_t( FOR <function_module> IN function_modules
+    DATA(function_modules_selopt) = VALUE selopt_tt( FOR <function_module> IN function_modules
                                                            ( sign   = 'I'
                                                              option = 'EQ'
                                                              low    = <function_module>-funcname ) ).
@@ -395,7 +396,7 @@ CLASS zcl_ab_code_scanner IMPLEMENTATION.
 
   METHOD get_relevant_object_types.
 
-    result  = VALUE rsdsselopt_t( ( sign   = 'I'
+    result  = VALUE selopt_tt( ( sign   = 'I'
                                     option = 'EQ'
                                     low    = type_class )
                                   ( sign   = 'I'
@@ -459,7 +460,7 @@ CLASS zcl_ab_code_scanner IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    DATA(includes_selopt) = VALUE rsdsselopt_t( FOR <programs_include> IN programs_includes
+    DATA(includes_selopt) = VALUE selopt_tt( FOR <programs_include> IN programs_includes
                                                       ( sign   = 'I'
                                                         option = 'EQ'
                                                         low    = <programs_include>-name ) ).
@@ -484,7 +485,7 @@ CLASS zcl_ab_code_scanner IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    DATA(class_selopt) = VALUE rsdsselopt_t( FOR <class> IN classes
+    DATA(class_selopt) = VALUE selopt_tt( FOR <class> IN classes
                                                ( sign   = 'I'
                                                  option = 'CP'
                                                  low    = <class>-name && testclass_suffix )
@@ -671,14 +672,14 @@ CLASS zcl_ab_code_scanner IMPLEMENTATION.
 
   METHOD get_objects_to_scan_of_trs.
 
-    DATA(tr_selopt) = VALUE rsdsselopt_t( FOR <task> IN tasks_trs_to_scan
+    DATA(tr_selopt) = VALUE selopt_tt( FOR <task> IN tasks_trs_to_scan
                                               ( sign   = 'I'
                                                 option = 'EQ'
                                                 low    = <task>-name ) ).
 
     DATA(object_types) = get_relevant_object_types( ).
 
-    DATA(author) = VALUE rsdsselopt_t(  ).
+    DATA(author) = VALUE selopt_tt(  ).
     IF attributes-created_by_me = abap_true.
 
       author = VALUE #( ( sign   = 'I'
